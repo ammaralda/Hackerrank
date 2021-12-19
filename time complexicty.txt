@@ -1,0 +1,44 @@
+#include <cmath>
+#include <cstdio>
+#include <vector>
+#include <iostream>
+#include <algorithm>
+using namespace std;
+
+
+int main() {
+    /* Enter your code here. Read input from STDIN. Print output to STDOUT */   
+    
+    int iter;
+    cin >> iter;
+    
+    int num;
+    int square;
+    int flag = 0;
+    for (int i = 0; i < iter; i++){
+        cin >> num;
+        square = sqrt(num);
+        flag = 0;
+        if (num == 1){
+            cout << "Not prime\n";
+        }
+        
+        else{
+            for (int j = 2; j <= square; j++){
+                
+                if (num % j == 0){
+                    cout << "Not prime\n";
+                    flag = 1;
+                    break;
+                }
+                
+            }
+            if (flag == 0){
+                cout << "Prime\n";
+                
+            }
+        }
+        
+    }
+    return 0;
+}
