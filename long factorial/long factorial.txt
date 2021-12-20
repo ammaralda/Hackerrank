@@ -1,0 +1,93 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+string ltrim(const string &);
+string rtrim(const string &);
+
+/*
+ * Complete the 'extraLongFactorials' function below.
+ *
+ * The function accepts INTEGER n as parameter.
+ */
+
+
+void extraLongFactorials(int n) {
+
+
+    int carry = 0;
+    int temp = 0;
+
+    vector<int> res;
+    res.push_back(1); // first result
+    int size = 1;
+    for (int i = 2; i <= n; i++){
+
+        //bigmultiply(i, res, res.size());
+        //cout << "res res" << res[0] << endl;
+
+        for (int j = 0; j < res.size(); j++){
+
+            temp = res[j] * i + carry;
+            //cout << temp << ":" << res[j] << "x" << i <<  endl;
+            res[j] = temp % 10; //last digit
+
+            carry = temp / 10; //first digit
+
+
+        }
+        int con = 0;
+        while (carry){
+
+            con = carry % 10;
+            res.push_back(con);
+            carry = carry / 10;
+
+
+
+        }
+
+
+
+    }
+
+    //res.erase(res.begin());
+    for (int i = res.size() - 1; i >= 0; i--){
+        cout << res[i];
+    }
+
+}
+
+int main()
+{
+    string n_temp;
+    getline(cin, n_temp);
+
+    int n = stoi(ltrim(rtrim(n_temp)));
+
+    extraLongFactorials(n);
+
+    return 0;
+}
+
+string ltrim(const string &str) {
+    string s(str);
+
+    s.erase(
+        s.begin(),
+        find_if(s.begin(), s.end(), not1(ptr_fun<int, int>(isspace)))
+    );
+
+    return s;
+}
+
+string rtrim(const string &str) {
+    string s(str);
+
+    s.erase(
+        find_if(s.rbegin(), s.rend(), not1(ptr_fun<int, int>(isspace))).base(),
+        s.end()
+    );
+
+    return s;
+}

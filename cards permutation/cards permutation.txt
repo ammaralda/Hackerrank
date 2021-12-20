@@ -1,0 +1,201 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+string ltrim(const string &);
+string rtrim(const string &);
+vector<string> split(const string &);
+
+/*
+ * Complete the 'solve' function below.
+ *
+ * The function is expected to return a LONG_INTEGER.
+ * The function accepts INTEGER_ARRAY x as parameter.
+ */
+unsigned int factorial(unsigned int n)
+{
+    if (n == 0)
+        return 1;
+    return n * factorial(n - 1);
+}
+
+int FindLoc(vector<int> x)
+{
+    int size = x.size();
+    int loc = 1;
+    
+    for(int i=0 ; i < size; i++ )
+    {
+        int used = 0;
+        
+        for(int j=0 ; j < i; j++ )
+            if(x[j]<x[i])
+                used ++;
+        
+        loc = loc + (factorial(x.size() - i -1 )*(x[i]-used-1));  
+    }
+    
+    return loc;
+}
+
+vector<vector<int>>  GeneratePerumation(vector<int> vec)
+{   
+    vector<vector<int>> res;
+    
+    if(vec.size() > 1)
+    {
+        for (int i = 0; i < vec.size(); i++)
+        {
+            vector<int> nvec = vec;
+            nvec.erase(nvec.begin() + i);
+            
+            vector<vector<int>> GP = GeneratePerumation(nvec);
+            
+            for (int j = 0; j < GP.size(); j++)
+            {
+                GP[j].push_back( vec[i]);
+                res.push_back(GP[j]);
+            }    
+        }
+        
+        return res; 
+    }
+
+    else
+    {
+        res.push_back(vec);
+        return  res;
+    }
+    
+
+}
+
+long solve(vector<int> x) {
+    
+    int sum = 0;
+    
+    vector<int> y;
+    
+    for(int i = 1; i<=x.size(); i++)
+    {
+        bool exist = false;
+        
+        for(int j = 1; j<=x.size(); j++)
+        { 
+            if(i==x[j-1])
+            {
+                exist = true;
+                break;
+            }
+        }
+            
+        if(!exist)
+            y.push_back(i);
+    }
+    
+    if(y.size() > 0)
+    {
+        vector<vector<int>> res = GeneratePerumation(y);
+        vector<int> perm;
+        
+        for(int i = 0; i<res.size(); i++)
+        {
+            perm = x;
+            for(int j = 0; j<perm.size(); j++)
+                if(perm[j]==0)
+                {
+                    perm[j] = res[i][0];
+                    res[i].erase(res[i].begin());
+                }
+            
+            sum = sum + FindLoc(perm);
+        }
+    }
+    
+    else
+        sum = sum + FindLoc(x);
+    
+    return sum;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+int main()
+{
+    ofstream fout(getenv("OUTPUT_PATH"));
+
+    string n_temp;
+    getline(cin, n_temp);
+
+    int n = stoi(ltrim(rtrim(n_temp)));
+
+    string a_temp_temp;
+    getline(cin, a_temp_temp);
+
+    vector<string> a_temp = split(rtrim(a_temp_temp));
+
+    vector<int> a(n);
+
+    for (int i = 0; i < n; i++) {
+        int a_item = stoi(a_temp[i]);
+
+        a[i] = a_item;
+    }
+
+    long result = solve(a);
+
+    fout << result << "\n";
+
+    fout.close();
+
+    return 0;
+}
+
+string ltrim(const string &str) {
+    string s(str);
+
+    s.erase(
+        s.begin(),
+        find_if(s.begin(), s.end(), not1(ptr_fun<int, int>(isspace)))
+    );
+
+    return s;
+}
+
+string rtrim(const string &str) {
+    string s(str);
+
+    s.erase(
+        find_if(s.rbegin(), s.rend(), not1(ptr_fun<int, int>(isspace))).base(),
+        s.end()
+    );
+
+    return s;
+}
+
+vector<string> split(const string &str) {
+    vector<string> tokens;
+
+    string::size_type start = 0;
+    string::size_type end = 0;
+
+    while ((end = str.find(" ", start)) != string::npos) {
+        tokens.push_back(str.substr(start, end - start));
+
+        start = end + 1;
+    }
+
+    tokens.push_back(str.substr(start));
+
+    return tokens;
+}
